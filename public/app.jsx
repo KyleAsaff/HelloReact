@@ -52,16 +52,7 @@ var Greeter = React.createClass({
 		};
 	},
 	handleNewName: function(updates) {
-		if(updates.name) {
-			this.setState({
-				name: updates.name
-			});
-		}
-		if(updates.text) {
-			this.setState({
-				text: updates.text
-			});
-		}
+		this.setState(updates);
 	},
 	render: function() {
 		var name = this.state.name;
