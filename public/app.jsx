@@ -1,11 +1,11 @@
 var GreeterMessage = React.createClass({
 	render: function() {
 		var name = this.props.name;
-		var paragraph = this.props.paragraph;
+		var text = this.props.text;
 		return (
 			<div>
 				<h1>Hello {name}</h1>
-				<p>{paragraph}</p>
+				<p>{text}</p>
 			</div>
 		);
 	}
@@ -15,16 +15,23 @@ var GreeterForm = React.createClass({
 	onFormSubmit: function (e) {
 		e.preventDefault();
 		var name = this.refs.name.value;
-
+		var text = this.refs.text.value;
+		var updates = {};
 		if(name.length > 0) {
+			updates.name = this.refs.name.value;
 			this.refs.name.value = '';
-			this.props.onNewName(name);
 		}
+		if(text.length > 0) {
+			updates.text = this.refs.text.value;
+			this.refs.text.value = '';
+		}
+		this.props.onNewName(updates); 
 	},
 	render: function() {
 		return (
 			<form onSubmit={this.onFormSubmit}>
 				<input type="text" ref="name" />
+				<textarea type="text" ref="text"/>
 				<button>Set Name</button>
 			</form>
 		);
@@ -35,25 +42,33 @@ var Greeter = React.createClass({
 	getDefaultProps: function() {
 		return {
 			name: "React",
-			message: "message default"
+			text: "message default"
 		};
 	},
 	getInitialState: function () {
 		return {
-			name: this.props.name
+			name: this.props.name,
+			text: this.props.text
 		};
 	},
-	handleNewName: function(name) {
-		this.setState({
-			name: name
-		});
+	handleNewName: function(updates) {
+		if(updates.name) {
+			this.setState({
+				name: updates.name
+			});
+		}
+		if(updates.text) {
+			this.setState({
+				text: updates.text
+			});
+		}
 	},
 	render: function() {
 		var name = this.state.name;
-		var message = this.props.message;
+		var text = this.state.text;
 		return (
 			<div>
-				<GreeterMessage name={name} paragraph={message}/>
+				<GreeterMessage name={name} text={text}/>
 				<GreeterForm onNewName={this.handleNewName}/>
 			</div>
 		);
@@ -61,8 +76,9 @@ var Greeter = React.createClass({
 });
 
 var name = "Kyle";
+var text = "text"
 
 ReactDOM.render(
-	<Greeter name={name} message="Message From Prop!" />,
+	<Greeter name={name} text={text} />,
 	document.getElementById("app")
 );
